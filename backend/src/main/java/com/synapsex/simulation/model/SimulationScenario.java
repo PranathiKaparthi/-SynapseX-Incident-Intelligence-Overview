@@ -1,0 +1,12 @@
+package com.synapsex.simulation.model;
+
+public enum SimulationScenario {
+    NORMAL_TRAFFIC,
+    CPU_SPIKE,
+    MEMORY_EXHAUSTION,
+    DATABASE_CONNECTION_POOL_EXHAUSTION,
+    API_LATENCY_INCREASE,
+    KAFKA_CONSUMER_LAG,
+    PAYMENT_FAILURE_CASCADE,
+    NETWORK_PARTITION
+}

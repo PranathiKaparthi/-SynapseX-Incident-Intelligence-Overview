@@ -1,0 +1,25 @@
+# Build output
+target/
+**/target/
+dist/
+**/dist/
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# IDE / Editor
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Logs & scratch
+*.log
+scratch/
+.system_generated/
+
+# OS files
+.DS_Store
+Thumbs.db
