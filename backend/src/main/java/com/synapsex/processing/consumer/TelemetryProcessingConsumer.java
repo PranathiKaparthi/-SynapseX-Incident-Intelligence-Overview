@@ -42,7 +42,8 @@ public class TelemetryProcessingConsumer {
 
     @KafkaListener(
             topics = KafkaTopicConfig.TELEMETRY_RAW_TOPIC,
-            groupId = "${spring.kafka.consumer.group-id:synapsex-consumer-group}"
+            groupId = "${spring.kafka.consumer.group-id:synapsex-consumer-group}",
+            autoStartup = "${synapsex.kafka.listener.auto-startup:true}"
     )
     @Transactional
     public void consume(ConsumerRecord<String, String> record, Acknowledgment ack) {

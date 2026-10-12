@@ -5,6 +5,8 @@ server:
 spring:
   application:
     name: synapsex-backend
+  profiles:
+    default: dev
   lifecycle:
     timeout-per-shutdown-phase: 20s
   datasource:
