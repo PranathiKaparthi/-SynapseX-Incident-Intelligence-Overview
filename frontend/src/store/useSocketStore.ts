@@ -50,7 +50,15 @@ export const useSocketStore = create<SocketState>((set, get) => {
       if (existing && existing.active) return;
 
       const client = new Client({
-        webSocketFactory: () => new SockJS('/ws/synapsex'),
+        webSocketFactory: () => {
+          try {
+            const SockJSClass = (SockJS as any).default || SockJS;
+            return new SockJSClass('/ws/synapsex');
+          } catch (e) {
+            const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            return new WebSocket(`${proto}//${window.location.host}/ws/synapsex/websocket`);
+          }
+        },
         connectHeaders: {
           Authorization: `Bearer ${ApiClient.getAccessToken() || ''}`,
         },

@@ -24,13 +24,22 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => {
-  const savedUser = localStorage.getItem('synapsex_user');
-  const savedWs = localStorage.getItem('synapsex_ws');
+  let user = null;
+  let workspace = null;
+  try {
+    const savedUser = localStorage.getItem('synapsex_user');
+    if (savedUser) user = JSON.parse(savedUser);
+  } catch {}
+  try {
+    const savedWs = localStorage.getItem('synapsex_ws');
+    if (savedWs) workspace = JSON.parse(savedWs);
+  } catch {}
+
   const token = localStorage.getItem('synapsex_token');
 
   return {
-    user: savedUser ? JSON.parse(savedUser) : null,
-    workspace: savedWs ? JSON.parse(savedWs) : {
+    user,
+    workspace: workspace || {
       id: '00000000-0000-0000-0000-000000000001',
       name: 'Acme Corp Production',
       slug: 'acme-prod'
