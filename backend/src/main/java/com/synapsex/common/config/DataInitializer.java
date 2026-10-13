@@ -17,6 +17,7 @@ import com.synapsex.knowledge.dto.CreateKnowledgeDto;
 import com.synapsex.knowledge.service.RagService;
 import com.synapsex.processing.model.AnomalyRule;
 import com.synapsex.processing.repository.AnomalyRuleRepository;
+import com.synapsex.auth.security.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -32,6 +33,7 @@ public class DataInitializer implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
 
     public static final UUID DEFAULT_WORKSPACE_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
+    public static final String DEFAULT_API_KEY = "syn_live_demo_key_2026";
 
     private final WorkspaceRepository workspaceRepository;
     private final UserRepository userRepository;
@@ -42,6 +44,7 @@ public class DataInitializer implements CommandLineRunner {
     private final IngestionApiKeyRepository apiKeyRepository;
     private final RagService ragService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public DataInitializer(
             WorkspaceRepository workspaceRepository,
@@ -52,7 +55,8 @@ public class DataInitializer implements CommandLineRunner {
             AnomalyRuleRepository ruleRepository,
             IngestionApiKeyRepository apiKeyRepository,
             RagService ragService,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService) {
         this.workspaceRepository = workspaceRepository;
         this.userRepository = userRepository;
         this.memberRepository = memberRepository;
@@ -62,6 +66,7 @@ public class DataInitializer implements CommandLineRunner {
         this.apiKeyRepository = apiKeyRepository;
         this.ragService = ragService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -117,7 +122,8 @@ public class DataInitializer implements CommandLineRunner {
         ruleRepository.save(new AnomalyRule(ws.getId(), "Consumer Lag Rule", "consumerLag", "GREATER_THAN", 2000.0, 180, 300, "WARNING"));
 
         // 6. API Key
-        apiKeyRepository.save(new IngestionApiKey(ws, "Default Ingestion Key", "syn-dev", "hash-syn-dev-key"));
+        apiKeyRepository.save(new IngestionApiKey(ws, "Default Ingestion Key", "syn_live_demo", jwtService.hashToken(DEFAULT_API_KEY)));
+        apiKeyRepository.save(new IngestionApiKey(ws, "Dev Key", "syn-dev", jwtService.hashToken("syn-dev")));
 
         // 7. Seed Post-Mortem in pgvector / RAG memory
         try {

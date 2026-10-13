@@ -57,6 +57,7 @@ public class IncidentKnowledge {
     }
 
     public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
     public UUID getWorkspaceId() { return workspaceId; }
     public UUID getIncidentId() { return incidentId; }
     public String getTitle() { return title; }

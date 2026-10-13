@@ -38,6 +38,8 @@ public class IngestionService {
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
     private final KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired(required = false)
+    private com.synapsex.processing.service.TelemetryPipelineService telemetryPipelineService;
 
     private final Counter ingestedCounter;
     private final Counter rejectedCounter;
@@ -103,9 +105,13 @@ public class IngestionService {
         int accepted = 0;
         int rejected = 0;
 
+        String wsKey = workspace.getId().toString();
+        // High-throughput fast path: attempt atomic reservation for entire batch
+        boolean wholeBatchReserved = rateLimiterService.tryConsume(wsKey, batch.size());
+
         for (TelemetryEnvelopeDto dto : batch) {
             try {
-                if (!rateLimiterService.tryConsume(workspace.getId().toString())) {
+                if (!wholeBatchReserved && !rateLimiterService.tryConsume(wsKey)) {
                     rejected++;
                     rejectedCounter.increment();
                     results.add(BatchIngestionResponseDto.EventResultDto.rejected(
@@ -147,6 +153,8 @@ public class IngestionService {
             String payloadJson = objectMapper.writeValueAsString(dto);
             if (kafkaTemplate != null) {
                 kafkaTemplate.send(KafkaTopicConfig.TELEMETRY_RAW_TOPIC, partitionKey, payloadJson);
+            } else if (telemetryPipelineService != null) {
+                telemetryPipelineService.processSingle(dto, workspace.getId());
             }
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize telemetry envelope: {}", dto.eventId(), e);

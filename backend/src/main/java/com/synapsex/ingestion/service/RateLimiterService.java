@@ -28,10 +28,21 @@ public class RateLimiterService {
         return bucket.tryConsume(1);
     }
 
+    public boolean tryConsume(String key, long tokens) {
+        if (tokens <= 0) return true;
+        Bucket bucket = buckets.computeIfAbsent(key, this::createNewBucket);
+        return bucket.tryConsume(tokens);
+    }
+
+    public long getAvailableTokens(String key) {
+        Bucket bucket = buckets.computeIfAbsent(key, this::createNewBucket);
+        return bucket.getAvailableTokens();
+    }
+
     private Bucket createNewBucket(String key) {
         Bandwidth limit = Bandwidth.builder()
                 .capacity(burstCapacity)
-                .refillIntervally(rateLimitPerSecond, Duration.ofSeconds(1))
+                .refillGreedy(rateLimitPerSecond, Duration.ofSeconds(1))
                 .build();
         return Bucket.builder().addLimit(limit).build();
     }

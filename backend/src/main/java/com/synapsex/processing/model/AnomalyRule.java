@@ -69,6 +69,7 @@ public class AnomalyRule {
     }
 
     public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
     public UUID getWorkspaceId() { return workspaceId; }
     public String getName() { return name; }
     public UUID getServiceId() { return serviceId; }

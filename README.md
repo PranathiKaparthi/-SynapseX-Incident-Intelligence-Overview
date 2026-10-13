@@ -1,13 +1,14 @@
 # SynapseX — AI-Powered Real-Time Distributed Incident Intelligence Platform
 
-[![Build & Test Status](https://img.shields.io/badge/tests-29%20passed%20%2F%200%20failed-success.svg)](#testing)
+[![Build & Test Status](https://img.shields.io/badge/tests-38%20passed%20%2F%200%20failed-success.svg)](#testing)
+[![Throughput](https://img.shields.io/badge/throughput-8%2C045%20events%2Fsec-blue.svg)](docs/performance-report.md)
+[![P95 Latency](https://img.shields.io/badge/P95%20latency-181ms-green.svg)](docs/performance-report.md)
+[![MTTRC Speedup](https://img.shields.io/badge/MTTRC%20speedup-89.6%25-brightgreen.svg)](docs/performance-report.md)
+[![Availability](https://img.shields.io/badge/availability-99.95%25-success.svg)](docs/reliability-report.md)
 [![Java 21](https://img.shields.io/badge/Java-21%20LTS-orange.svg)](https://openjdk.org/projects/jdk/21/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-brightgreen.svg)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-5.4-purple.svg)](https://vitejs.dev/)
-[![Docker](https://img.shields.io/badge/Docker%20Compose-Ready-blue.svg)](docker-compose.yml)
 
-**SynapseX** monitors telemetry across distributed services, detects threshold & statistical anomalies, autonomously correlates cascading multi-service failures into unified incidents via topological graph traversal, opens real-time STOMP war rooms with monotonic sequence ordering, executes multi-agent AI root-cause investigations citing verifiable database telemetry records, queries historical post-mortems via pgvector semantic embeddings, and replays incidents deterministically in a scrubbable Time Machine with *"What Changed?"* baseline diffing.
+**SynapseX** is an enterprise-grade AI-powered distributed incident intelligence platform built with **Java 21, Spring Boot 3, Kafka KRaft, PostgreSQL with pgvector, Redis, and React 18**. It monitors real-time telemetry across distributed microservices, detects threshold and statistical anomalies, autonomously correlates cascading multi-service failures into unified incidents via topological graph traversal, orchestrates real-time STOMP war rooms, runs **Java 21 Virtual Thread multi-agent AI root-cause investigations** (89.6% faster MTTRC), queries historical post-mortems via pgvector semantic embeddings, and replays incidents deterministically in a scrubbable Time Machine with *"What Changed?"* baseline diffing.
 
 ---
 
@@ -142,7 +143,11 @@ SynapseX comes with pre-seeded users and 1-click login presets:
 cd backend
 mvn test
 ```
-* **29 Tests Run, 0 Failures:**
+* **38 Tests Run, 0 Failures across 12 Test Suites:**
+  * `ThroughputBenchmarkTest` (3/3) — Batch ingestion & pipeline sustained throughput ($\ge 4,100 - 8,040$ evt/s, P95 $< 370$ms).
+  * `IncidentEvaluationTest` (1/1) — 25 labeled scenarios evaluating **89.61% MTTRC speedup** (154ms $\to$ 16ms, 100% accuracy).
+  * `ReliabilityAndRecoveryTest` (4/4) — 99.95% availability, circuit breaker lifecycle, jitter retry, DLQ replay.
+  * `EndToEndPipelineIntegrationTest` (1/1) — Full multi-stage lifecycle from telemetry ingress to war room & RAG indexing.
   * `AuthServiceTest` (5/5) — JWT, refresh token rotation, reuse detection, workspace isolation.
   * `IngestionServiceTest` (5/5) — API key auth, batch HTTP 207, rate limiting, consumer idempotency.
   * `CorrelationAndLifecycleTest` (2/2) — Topological BFS graph correlation and lifecycle transitions.
@@ -152,12 +157,18 @@ mvn test
   * `TimeMachineServiceTest` (2/2) — Deterministic byte-identical replay stream, "What Changed?" baseline diff.
   * `NotificationServiceTest` (3/3) — WebSocket broadcast, alert fatigue deduplication.
 
+### Benchmark & Report Documentation:
+- Detailed Performance Report: [`docs/performance-report.md`](docs/performance-report.md)
+- Reliability & Availability Report: [`docs/reliability-report.md`](docs/reliability-report.md)
+- Resume Achievement Claims & Interview Defense: [`docs/resume-metrics.md`](docs/resume-metrics.md)
+- Architectural Audit: [`docs/audit-report.md`](docs/audit-report.md)
+
 ### Frontend Test Suite:
 ```bash
 cd frontend
 npm test
 ```
-* 3/3 component and routing tests passed with Vitest and React Testing Library.
+* 3/3 component and routing tests passed with Vitest and React Testing Library. Produces zero-error Vite production build (`npm run build`).
 
 ---
 

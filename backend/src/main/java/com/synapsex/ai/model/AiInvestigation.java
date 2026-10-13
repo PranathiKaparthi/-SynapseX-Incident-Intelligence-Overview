@@ -67,6 +67,7 @@ public class AiInvestigation {
     }
 
     public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
     public UUID getIncidentId() { return incidentId; }
     public UUID getWorkspaceId() { return workspaceId; }
     public String getMode() { return mode; }
